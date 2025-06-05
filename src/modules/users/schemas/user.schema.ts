@@ -14,8 +14,11 @@ export class User {
     @Prop({type: String, required: true})
     fullName: string;
 
-    @Prop({type: String, required: false})
+    @Prop({type: String, unique: true, required: false})
     username?: string
+
+    @Prop({type: String, required: false})
+    email: string
 
     @Prop({type: String, required: false, select: false})
     hashedPassword?: string

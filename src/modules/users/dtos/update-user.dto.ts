@@ -1,6 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
 import {IsEnum, IsString} from "class-validator";
-import {UserRole} from "../enums";
+import {UserGender, UserRole} from "../enums";
 
 export class UpdateUserDto {
     @ApiProperty()
@@ -17,9 +17,9 @@ export class UpdateUserDto {
 
     @ApiProperty()
     @IsEnum(UserRole)
-    role?: UserRole
+    role?: UserRole[]
 
     @ApiProperty()
-    @IsString()
-    gender?: string
+    @IsEnum(UserGender)
+    gender?: UserGender[]
 }
