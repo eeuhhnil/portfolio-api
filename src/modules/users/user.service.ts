@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from "@nestjs/common";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {User, UserDocument} from "./schemas/user.schema";
 import {InjectModel} from "@nestjs/mongoose";
 import {FilterQuery, PaginateModel, PaginateOptions} from 'mongoose'
@@ -7,6 +7,10 @@ import {QueryUserDTO} from "./dtos";
 @Injectable()
 export class UserService{
     constructor( @InjectModel(User.name) private readonly userModel: PaginateModel<UserDocument>){}
+
+    async create(payload: Omit<User, '_id'>){
+        return this.userModel.create(payload)
+    }
 
     async getUserById(id: string){
         return this.userModel.findById(id)
@@ -47,6 +51,10 @@ export class UserService{
         }
 
         return user
+    }
+
+    async checkExistingEmail(email: string){
+        return this.userModel.exists({email})
     }
 
 }
