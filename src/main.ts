@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import {ConfigService} from "@nestjs/config";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {ValidationPipe} from "@nestjs/common";
+import {ErrorsInterceptor, TransformInterceptor} from "./common/interceptors";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -22,6 +23,9 @@ async function bootstrap() {
       enableImplicitConversion: true,
     },
   }))
+
+    // Interceptor
+    app.useGlobalInterceptors(new ErrorsInterceptor(), new TransformInterceptor())
 
   // Filters
   app.useGlobalFilters()
