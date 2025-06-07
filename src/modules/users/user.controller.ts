@@ -26,12 +26,11 @@ export class UserController {
 
     @Get()
     @ApiOperation({summary: "Find many users"})
-    async findMany(@Query() query: QueryUserDTO){
-        const users = await this.userService.findManyUsers(query)
+    async findMany(@Query() query: QueryUserDTO,){
 
         return {
             message: 'Get users successfully',
-            data: users.map((user) => user.toJSON()),
+            data: await this.userService.findManyUsers(query)
         }
     }
 

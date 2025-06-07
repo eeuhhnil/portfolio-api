@@ -1,10 +1,8 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {User, UserDocument} from "./schemas/user.schema";
 import {InjectModel} from "@nestjs/mongoose";
-import {FilterQuery, PaginateModel} from 'mongoose'
+import {FilterQuery, PaginateModel, PaginateOptions} from 'mongoose'
 import {QueryUserDTO} from "./dtos";
-import {PaginationDTO} from "../../common/dto/pagination.dto";
-
 
 @Injectable()
 export class UserService{
@@ -14,22 +12,20 @@ export class UserService{
         return this.userModel.findById(id)
     }
 
-    async findManyUsers(query: QueryUserDTO, pagination: PaginationDTO){
-        const{fullName, role, gender} = query
-
+    async findManyUsers(query: QueryUserDTO){
         const filter: FilterQuery<User> = {}
-        if(fullName) filter.fullName = {$regex:fullName,$options:"i"};
-        if(role) filter.role = role
-        if(gender) filter.gender =gender
-
-        const{page = 1, limit = 10 , sortBy = 'createdAt', sortType = 'asc'} = pagination
-
-        const option ={
-            page,
-            limit,
-            sort : {[sortBy]: sortType === 'asc' ? 1: -1},
+        if(query.role) filter.role = { $in: query.role }
+        if(query.gender) filter.gender = query.gender
+        if(query.search){
+            filter.$or = [{fullName: {$regex: query.search, $options: 'i'}}]
         }
-        return this.userModel.find(filter, option)
+
+        const option: PaginateOptions ={
+            page: query.page,
+            limit: query.limit,
+            sort :  query.getSortObject()
+        }
+        return this.userModel.paginate(filter, option)
     }
 
     async removeUser(id: string){
