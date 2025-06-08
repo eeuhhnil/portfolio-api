@@ -1,8 +1,8 @@
-export enum UserRole{
-    ADMIN = "admin",
-    USER = "user",
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
 }
-export enum UserGender{
-    MALE = "male",
-    FEMALE = "female",
+export enum UserGender {
+  MALE = 'male',
+  FEMALE = 'female',
 }

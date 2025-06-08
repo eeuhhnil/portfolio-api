@@ -1,2 +1,2 @@
-export * from './transform.interceptor'
-export * from './erros.interceptor'
+export * from './transform.interceptor';
+export * from './erros.interceptor';
