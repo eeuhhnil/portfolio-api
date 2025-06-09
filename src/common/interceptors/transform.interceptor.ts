@@ -4,24 +4,24 @@ import {
   ExecutionContext,
   CallHandler,
   HttpStatus,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+} from '@nestjs/common'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 export interface PaginationMetadata {
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  itemsPerPage: number;
-  hasNextPage: boolean;
-  hasPrevPage: boolean;
+  totalItems: number
+  totalPages: number
+  currentPage: number
+  itemsPerPage: number
+  hasNextPage: boolean
+  hasPrevPage: boolean
 }
 
 interface ApiResponse<T> {
-  statusCode: number;
-  message: string;
-  data?: T | undefined;
-  pagination?: PaginationMetadata | undefined;
+  statusCode: number
+  message: string
+  data?: T | undefined
+  pagination?: PaginationMetadata | undefined
 }
 
 @Injectable()
@@ -32,8 +32,8 @@ export class TransformInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<ApiResponse<T>> {
-    const ctx = context.switchToHttp();
-    const response = ctx.getResponse();
+    const ctx = context.switchToHttp()
+    const response = ctx.getResponse()
 
     return next.handle().pipe(
       map((res) => {
@@ -42,26 +42,26 @@ export class TransformInterceptor<T>
           message: res.message || 'OK',
           data: this.transformData(res.data),
           pagination: res.pagination ? res.pagination : undefined,
-        };
+        }
       }),
-    );
+    )
   }
 
   private transformData(data: any): any {
     if (data === null || data === undefined) {
-      return undefined;
+      return undefined
     }
 
     if (Array.isArray(data)) {
-      return data.map((item) => this.transformData(item));
+      return data.map((item) => this.transformData(item))
     }
 
     if (data && typeof data === 'object') {
       if (typeof data.toJSON === 'function') {
-        return data.toJSON();
+        return data.toJSON()
       }
 
-      return data;
+      return data
     }
   }
 }

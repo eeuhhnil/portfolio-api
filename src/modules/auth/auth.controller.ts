@@ -1,15 +1,11 @@
-import {Body, Controller, Post, UseGuards, Request, Get, Req} from '@nestjs/common';
-import { AuthService } from './auth.service';
-import {LoginLocalDto, RegisterDto} from './dto';
-import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {LocalAuthGuard} from "./guards/local-auth.guard";
-import {RefreshTokenDto} from "./dto/refresh.dto";
-import {UserRoles} from "./decorators/roles.decorator";
-import {UserRole} from "../users/enums";
-import {JwtAuthGuard} from "./guards/jwt-auth.guard";
-import {SystemRoleGuard} from "./guards/system-role.guard";
-import {AuthUser} from "./decorators/auth-user.decorator";
-import {AuthPayload} from "./types";
+import {Body, Controller, Post, UseGuards, Req} from '@nestjs/common'
+import { AuthService } from './auth.service'
+import { LoginLocalDto, RegisterDto } from './dto'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { RefreshTokenDto } from './dto/refresh.dto'
+import {LocalAuthGuard} from "./guards";
+import {Request} from 'express'
+
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -22,37 +18,25 @@ export class AuthController {
     return {
       message: 'Register user successfully',
       data: await this.authService.localRegister(payload),
-    };
+    }
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async localLogin(@Body() payload: LoginLocalDto, @Request() req) {
+  async localLogin(@Body() payload: LoginLocalDto, @Req() req: Request) {
     return {
       message: 'Login user successfully',
       data: await this.authService.localLogin(req.user),
     }
   }
 
-
   @Post('refresh')
   async refreshToken(@Body() payload: RefreshTokenDto) {
-    const data = await this.authService.jwtRefresh(payload.refresh_token);
+    const data = await this.authService.jwtRefresh(payload.refresh_token)
     return {
       message: 'Login user successfully',
       data,
-    };
+    }
   }
-
-  @UseGuards(JwtAuthGuard)
-  @UserRoles(UserRole.ADMIN)
-  @Get('admin-test')
-  getAdminTest(@Req() req: any) {
-    console.log(req.user);
-    // return { message: 'Admin Only' };
-  }
-
-
-
 
 }

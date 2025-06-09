@@ -1,12 +1,11 @@
 import {
-  ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { User, UserDocument } from './schemas/user.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, PaginateModel, PaginateOptions } from 'mongoose';
-import { QueryUserDTO } from './dtos';
+} from '@nestjs/common'
+import { User, UserDocument } from './schemas/user.schema'
+import { InjectModel } from '@nestjs/mongoose'
+import { FilterQuery, PaginateModel, PaginateOptions } from 'mongoose'
+import { QueryUserDTO } from './dtos'
 
 @Injectable()
 export class UserService {
@@ -16,59 +15,57 @@ export class UserService {
   ) {}
 
   async create(payload: Omit<User, '_id'>) {
-    return this.userModel.create(payload);
+    return this.userModel.create(payload)
   }
 
   async getUserById(id: string) {
-    return this.userModel.findById(id);
+    return this.userModel.findById(id)
   }
 
   async findOne(
-      filter: FilterQuery<User>,
-      options: {
-        select?: string | string[]
-      } = {}
+    filter: FilterQuery<User>,
+    options: {
+      select?: string | string[]
+    } = {},
   ) {
-    return this.userModel.findOne(filter).select(options.select || {});
+    return this.userModel.findOne(filter).select(options.select || {})
   }
 
   async findManyUsers(query: QueryUserDTO) {
-    const filter: FilterQuery<User> = {};
-    if (query.role) filter.role = { $in: query.role };
-    if (query.gender) filter.gender = query.gender;
+    const filter: FilterQuery<User> = {}
+    if (query.role) filter.role = { $in: query.role }
+    if (query.gender) filter.gender = query.gender
     if (query.search) {
-      filter.$or = [{ fullName: { $regex: query.search, $options: 'i' } }];
+      filter.$or = [{ fullName: { $regex: query.search, $options: 'i' } }]
     }
 
     const option: PaginateOptions = {
       page: query.page,
       limit: query.limit,
       sort: query.getSortObject(),
-    };
-    return this.userModel.paginate(filter, option);
+    }
+    return this.userModel.paginate(filter, option)
   }
 
   async removeUser(id: string) {
-    return this.userModel.deleteOne({ _id: id });
+    return this.userModel.deleteOne({ _id: id })
   }
 
   async updateUser(id: string, data: Partial<Omit<User, '_id'>>) {
-    await this.checkExistingUser(id);
+    const user = await this.checkExisting({_id: id})
 
-    return this.userModel.findOneAndUpdate({ _id: id }, data, { new: true });
-  }
-
-  async checkExistingUser(id: string) {
-    const user = this.userModel.exists({ _id: id });
-
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+    if (!user){
+      throw new NotFoundException(`User with id ${id} not found`)
     }
 
-    return user;
+    return this.userModel.findOneAndUpdate({ _id: id }, data, { new: true })
+  }
+
+  async checkExisting(filter: FilterQuery<User>) {
+    return this.userModel.exists(filter )
   }
 
   async checkExistingEmail(email: string) {
-    return this.userModel.exists({ email });
+    return this.userModel.exists({ email })
   }
 }

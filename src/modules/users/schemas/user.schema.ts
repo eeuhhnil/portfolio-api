@@ -1,25 +1,25 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as paginate from 'mongoose-paginate-v2';
-import { UserGender, UserRole } from '../enums';
-import { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import * as paginate from 'mongoose-paginate-v2'
+import { UserGender, UserRole } from '../enums'
+import { HydratedDocument } from 'mongoose'
 
-export type UserDocument = HydratedDocument<User>;
+export type UserDocument = HydratedDocument<User>
 
 @Schema({
   timestamps: true,
 })
 export class User {
   @Prop({ type: String, required: true })
-  fullName: string;
+  fullName: string
 
-  @Prop({ type: String, unique: true, required: false })
-  username?: string;
+  @Prop({ type: String, unique: true, sparse: true, required: false })
+  username?: string
 
   @Prop({ type: String, required: false })
-  email: string;
+  email: string
 
   @Prop({ type: String, required: false, select: false })
-  hashedPassword?: string;
+  hashedPassword?: string
 
   @Prop({
     type: String,
@@ -27,10 +27,10 @@ export class User {
     required: false,
     default: UserRole.USER,
   })
-  role?: UserRole;
+  role?: UserRole
 
   @Prop({ type: String, enum: UserGender, required: false })
-  gender?: UserGender;
+  gender?: UserGender
 }
-export const UserSchema = SchemaFactory.createForClass(User);
-UserSchema.plugin(paginate);
+export const UserSchema = SchemaFactory.createForClass(User)
+UserSchema.plugin(paginate)

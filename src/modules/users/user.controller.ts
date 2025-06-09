@@ -7,36 +7,36 @@ import {
   Param,
   Patch,
   Query,
-} from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { QueryUserDTO, UpdateUserDto } from './dtos';
+} from '@nestjs/common'
+import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger'
+import { UserService } from './user.service'
+import { QueryUserDTO, UpdateUserDto } from './dtos'
 
 @Controller()
 @ApiTags('User')
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user by id' })
   async findUserById(@Param('id') id: string) {
-    const user = await this.userService.getUserById(id);
+    const user = await this.userService.getUserById(id)
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('User not found')
     }
 
     return {
       message: 'Get user by id successfully',
       data: user.toJSON(),
-    };
+    }
   }
 
   @Get('email/:email')
   async findOne(@Param('email') email: string) {
     return {
-
-      data: await this.userService.findOne({email})
+      data: await this.userService.findOne({ email }),
     }
   }
 
@@ -46,7 +46,7 @@ export class UserController {
     return {
       message: 'Get users successfully',
       data: await this.userService.findManyUsers(query),
-    };
+    }
   }
 
   @Delete(':id')
@@ -55,7 +55,7 @@ export class UserController {
     return {
       message: 'Delete user',
       data: await this.userService.removeUser(id),
-    };
+    }
   }
 
   @Patch(':id')
@@ -67,6 +67,6 @@ export class UserController {
     return {
       message: 'Update user',
       data: await this.userService.updateUser(id, updateUserDto),
-    };
+    }
   }
 }

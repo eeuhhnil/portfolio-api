@@ -1,25 +1,25 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
-import { UserGender, UserRole } from '../enums';
+import { ApiProperty } from '@nestjs/swagger'
+import { IsEnum, IsString } from 'class-validator'
+import { UserGender, UserRole } from '../enums'
 
 export class UpdateUserDto {
   @ApiProperty()
   @IsString()
-  fullName?: string;
+  fullName?: string
 
   @ApiProperty()
   @IsString()
-  username?: string;
+  username?: string
 
   @ApiProperty()
   @IsString()
-  hashedPassword?: string;
+  hashedPassword?: string
 
   @ApiProperty()
   @IsEnum(UserRole)
-  role?: UserRole;
+  role?: UserRole
 
   @ApiProperty()
   @IsEnum(UserGender)
-  gender?: UserGender;
+  gender?: UserGender
 }

@@ -5,9 +5,9 @@ import {
   IsString,
   Max,
   Min,
-} from 'class-validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+} from 'class-validator'
+import { ApiPropertyOptional } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
 
 export class PaginationDTO {
   @ApiPropertyOptional({
@@ -20,7 +20,7 @@ export class PaginationDTO {
   @IsInt()
   @Min(1)
   @IsOptional()
-  page?: number = 1;
+  page?: number = 1
 
   @ApiPropertyOptional({
     description: 'Number of items per page',
@@ -33,7 +33,7 @@ export class PaginationDTO {
   @IsNumber()
   @Min(1)
   @Max(100)
-  limit?: number = 10;
+  limit?: number = 10
 
   @ApiPropertyOptional({
     description: 'Search term to filter results',
@@ -41,7 +41,7 @@ export class PaginationDTO {
   })
   @IsString({ message: 'Search term must be a string' })
   @IsOptional()
-  search?: string;
+  search?: string
 
   @ApiPropertyOptional({
     description:
@@ -51,27 +51,27 @@ export class PaginationDTO {
   })
   @IsOptional()
   @IsString()
-  sort?: string = 'createdAt:desc';
+  sort?: string = 'createdAt:desc'
 
   getSortObject(): Record<string, 1 | -1> {
     if (!this.sort) {
-      return { createdAt: -1 };
+      return { createdAt: -1 }
     }
 
-    const sortObject: Record<string, 1 | -1> = {};
-    const sortField = this.sort.split(',');
+    const sortObject: Record<string, 1 | -1> = {}
+    const sortField = this.sort.split(',')
 
     sortField.forEach((sortItem) => {
-      const [field, order] = sortItem.trim().split(':');
+      const [field, order] = sortItem.trim().split(':')
       if (field) {
-        sortObject[field] = order?.toLowerCase() === 'desc' ? -1 : 1;
+        sortObject[field] = order?.toLowerCase() === 'desc' ? -1 : 1
       }
-    });
+    })
 
     if (Object.keys(sortObject).length === 0) {
-      return { createdAt: -1 };
+      return { createdAt: -1 }
     }
 
-    return sortObject;
+    return sortObject
   }
 }
