@@ -18,16 +18,15 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
   async localRegister(payload: RegisterDto) {
-    const existingEmail = await this.userService.checkExisting(
-        {email: payload.email},
-    )
+    const existingEmail = await this.userService.checkExisting({
+      email: payload.email,
+    })
 
     if (existingEmail) {
       throw new ConflictException('Email already exist')
     }
 
     const { password, ...subPayload } = payload
-
 
     const newUser = await this.userService.create({
       hashedPassword: bcrypt.hashSync(password, 10),
@@ -85,32 +84,32 @@ export class AuthService {
   }
 
   async validateGoogleUser(payload: {
-    email: string,
-    fullName: string,
-    avatar?: string,
+    email: string
+    fullName: string
+    avatar?: string
     googleId: string
-  })
-  {
+  }) {
     let user = await this.userService.findOne({ email: payload.email })
 
     if (!user) {
       user = await this.userService.create({
         email: payload.email,
         fullName: payload.fullName,
-        avatar: payload.avatar
+        avatar: payload.avatar,
       })
-    }
-  else if(!user.googleId) {
-    user.googleId = payload.googleId
+    } else if (!user.googleId) {
+      user.googleId = payload.googleId
       await user.save()
     }
 
     if (!user.role) {
-      throw new Error('User role is missing');
+      throw new Error('User role is missing')
     }
 
-    return this.jwtSign({ sub: user._id.toString(), email: user.email, role: user.role})
+    return this.jwtSign({
+      sub: user._id.toString(),
+      email: user.email,
+      role: user.role,
+    })
   }
 }
-
-

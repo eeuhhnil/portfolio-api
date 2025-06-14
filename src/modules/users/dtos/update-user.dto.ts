@@ -1,25 +1,36 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsEnum, IsString } from 'class-validator'
+import { ApiPropertyOptional } from '@nestjs/swagger'
+import { IsEnum, IsOptional, IsString } from 'class-validator'
 import { UserGender, UserRole } from '../enums'
+import { Transform } from 'class-transformer'
 
 export class UpdateUserDto {
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
+  @Transform(({ value }) => value === '' ? undefined : value)
   fullName?: string
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  username?: string
-
-  @ApiProperty()
-  @IsString()
+  @Transform(({ value }) => value === '' ? undefined : value)
   hashedPassword?: string
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsEnum(UserRole)
+  @Transform(({ value }) => value === '' ? undefined : value)
   role?: UserRole
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Transform(({ value }) => value === '' ? undefined : value)
   @IsEnum(UserGender)
   gender?: UserGender
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => value === '' ? undefined : value)
+  avatar?: string
 }

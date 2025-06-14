@@ -1,12 +1,21 @@
-import { Body, Controller, Post, UseGuards, Req, Get, Res, UnauthorizedException } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  Req,
+  Get,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { LoginLocalDto, RegisterDto } from './dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { RefreshTokenDto } from './dto/refresh.dto'
 import { LocalAuthGuard } from './guards'
-import {Request} from 'express'
+import { Request } from 'express'
 import { AuthGuard } from '@nestjs/passport'
-
+import { Public } from './decorators'
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -14,6 +23,7 @@ import { AuthGuard } from '@nestjs/passport'
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @Post('register')
   async localRegister(@Body() payload: RegisterDto) {
     return {
@@ -22,6 +32,7 @@ export class AuthController {
     }
   }
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async localLogin(@Body() payload: LoginLocalDto, @Req() req: Request) {
@@ -40,11 +51,12 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async auth (){
-  }
+  async auth() {}
 
+  @Public()
   @UseGuards(AuthGuard('google'))
   @Get('google-redirect')
   async googleCallback(@Req() req) {

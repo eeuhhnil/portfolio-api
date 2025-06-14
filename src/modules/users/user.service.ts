@@ -1,11 +1,9 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { User, UserDocument } from './schemas/user.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { FilterQuery, PaginateModel, PaginateOptions } from 'mongoose'
 import { QueryUserDTO } from './dtos'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -52,17 +50,28 @@ export class UserService {
   }
 
   async updateUser(id: string, data: Partial<Omit<User, '_id'>>) {
-    const user = await this.checkExisting({_id: id})
+    const user = await this.checkExisting({ _id: id })
 
-    if (!user){
+    if (!user) {
       throw new NotFoundException(`User with id ${id} not found`)
     }
 
-    return this.userModel.findOneAndUpdate({ _id: id }, data, { new: true })
+    const { hashedPassword, ...userInfo } = data
+
+    return this.userModel.findOneAndUpdate(
+      { _id: id },
+      {
+        hashedPassword: hashedPassword
+          ? bcrypt.hashSync(hashedPassword, 10)
+          : undefined,
+        ...userInfo,
+      },
+      { new: true },
+    )
   }
 
   async checkExisting(filter: FilterQuery<User>) {
-    return this.userModel.exists(filter )
+    return this.userModel.exists(filter)
   }
 
   async checkExistingEmail(email: string) {
