@@ -83,4 +83,34 @@ export class AuthService {
       },
     )
   }
+
+  async validateGoogleUser(payload: {
+    email: string,
+    fullName: string,
+    avatar?: string,
+    googleId: string
+  })
+  {
+    let user = await this.userService.findOne({ email: payload.email })
+
+    if (!user) {
+      user = await this.userService.create({
+        email: payload.email,
+        fullName: payload.fullName,
+        avatar: payload.avatar
+      })
+    }
+  else if(!user.googleId) {
+    user.googleId = payload.googleId
+      await user.save()
+    }
+
+    if (!user.role) {
+      throw new Error('User role is missing');
+    }
+
+    return this.jwtSign({ sub: user._id.toString(), email: user.email, role: user.role})
+  }
 }
+
+

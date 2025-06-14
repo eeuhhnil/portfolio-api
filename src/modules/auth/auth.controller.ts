@@ -1,10 +1,11 @@
-import {Body, Controller, Post, UseGuards, Req} from '@nestjs/common'
+import { Body, Controller, Post, UseGuards, Req, Get, Res, UnauthorizedException } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { LoginLocalDto, RegisterDto } from './dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { RefreshTokenDto } from './dto/refresh.dto'
-import {LocalAuthGuard} from "./guards";
+import { LocalAuthGuard } from './guards'
 import {Request} from 'express'
+import { AuthGuard } from '@nestjs/passport'
 
 
 @Controller('auth')
@@ -39,4 +40,17 @@ export class AuthController {
     }
   }
 
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async auth (){
+  }
+
+  @UseGuards(AuthGuard('google'))
+  @Get('google-redirect')
+  async googleCallback(@Req() req) {
+    if (!req.user)
+      throw new UnauthorizedException('Google authentication failed')
+
+    return req.user
+  }
 }

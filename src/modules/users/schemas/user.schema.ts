@@ -21,6 +21,9 @@ export class User {
   @Prop({ type: String, required: false, select: false })
   hashedPassword?: string
 
+  @Prop({ type: String, required: false})
+  avatar?: string
+
   @Prop({
     type: String,
     enum: UserRole,
@@ -28,6 +31,9 @@ export class User {
     default: UserRole.USER,
   })
   role?: UserRole
+
+  @Prop({type: String, required: false})
+  googleId?: string
 
   @Prop({ type: String, enum: UserGender, required: false })
   gender?: UserGender
