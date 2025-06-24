@@ -9,7 +9,6 @@ import {
   Patch,
   Query,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import {
@@ -21,13 +20,12 @@ import {
 } from '@nestjs/swagger'
 import { UserService } from './user.service'
 import { QueryUserDTO, UpdateUserDto } from './dtos'
-import { JwtAuthGuard } from '../auth/guards'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { StorageService } from '../storages/storage.service'
 import * as path from 'node:path'
 import { UserGender, UserRole } from './enums'
 
-@Controller()
+@Controller('users')
 @ApiTags('User')
 @ApiBearerAuth()
 export class UserController {
