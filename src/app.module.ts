@@ -7,6 +7,7 @@ import { APP_GUARD } from '@nestjs/core'
 import { StorageModule } from './modules/storages/storage.module'
 import { JwtAuthGuard } from './modules/auth/guards'
 import { TagModule } from './modules/tags/tag.module'
+import { ArticleModule } from './modules/articles/article.module'
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { TagModule } from './modules/tags/tag.module'
     UserModule,
     AuthModule,
     StorageModule,
-    TagModule
+    TagModule,
+    ArticleModule,
   ],
   controllers: [],
   providers: [
