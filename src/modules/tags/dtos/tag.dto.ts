@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 import { PaginationDTO } from '../../../common/dto/pagination.dto'
+import { PartialType } from '@nestjs/mapped-types';
 
 export class TagDto{
   @ApiProperty({
@@ -11,6 +12,6 @@ export class TagDto{
   name: string;
 }
 
-export class QueryTagDto extends PaginationDTO{}
+export class QueryTagDto extends PartialType(PaginationDTO) {}
 
-export class UpdateTagDto extends TagDto{}
+export class UpdateTagDto extends PartialType(TagDto){}

@@ -24,7 +24,7 @@ export class TagService {
     const option: PaginateOptions = {
       limit: query.limit,
       page: query.page,
-      sort: query.getSortObject()
+      sort: query.getSortObject?.()
     }
 
     return this.tagModel.paginate(filter, option)
