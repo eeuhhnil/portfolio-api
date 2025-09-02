@@ -9,6 +9,8 @@ import { JwtAuthGuard } from './modules/auth/guards'
 import { TagModule } from './modules/tags/tag.module'
 import { ArticleModule } from './modules/articles/article.module'
 import { ProjectModule } from './modules/projects/project.module'
+import { CategoryModule } from './modules/category/category.module'
+import { ServiceModule } from './modules/services/service.module'
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ProjectModule } from './modules/projects/project.module'
     TagModule,
     ArticleModule,
     ProjectModule,
+    CategoryModule,
+    ServiceModule,
   ],
   controllers: [],
   providers: [
