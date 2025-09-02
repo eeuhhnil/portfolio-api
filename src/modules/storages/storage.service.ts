@@ -3,6 +3,7 @@ import {
   S3Client,
   PutObjectCommand,
   PutObjectCommandInput,
+  DeleteObjectCommand,
   DeleteBucketCommand,
 } from '@aws-sdk/client-s3'
 import { ConfigService } from '@nestjs/config'
@@ -65,7 +66,6 @@ export class StorageService implements OnModuleInit {
       Key: fileKey,
       Body: file.buffer,
       ContentType: file.mimetype,
-      ACL: 'public-read',
     }
 
     const command = new PutObjectCommand(uploadParam)
@@ -80,7 +80,7 @@ export class StorageService implements OnModuleInit {
       Key: fileKey,
     }
 
-    const command = new DeleteBucketCommand(deleteParam)
+    const command = new DeleteObjectCommand(deleteParam)
 
     try {
       await this.s3Client.send(command)
@@ -88,6 +88,16 @@ export class StorageService implements OnModuleInit {
     } catch (error) {
       this.logger.error(`Error deleting file with key '${fileKey}':`, error)
       throw error
+    }
+  }
+
+  extractKeyFromUrl(url: string): string {
+    try {
+      const urlObj = new URL(url)
+      return urlObj.pathname.substring(1)
+    } catch (error) {
+      console.error(`Invalid URL format: ${url}`, error)
+      throw new Error(`Invalid URL format: ${url}`)
     }
   }
 }

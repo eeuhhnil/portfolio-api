@@ -7,12 +7,10 @@ export type TagDocument = HydratedDocument<Tag>
 @Schema({
   timestamps: true,
 })
-
-export class Tag{
-  @Prop({type: String, unique: true, required: true})
+export class Tag {
+  @Prop({ type: String, unique: true, required: true })
   name: string
 }
 
 export const TagSchema = SchemaFactory.createForClass(Tag)
 TagSchema.plugin(paginate)
-

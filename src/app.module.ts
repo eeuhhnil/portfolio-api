@@ -8,6 +8,7 @@ import { StorageModule } from './modules/storages/storage.module'
 import { JwtAuthGuard } from './modules/auth/guards'
 import { TagModule } from './modules/tags/tag.module'
 import { ArticleModule } from './modules/articles/article.module'
+import { ProjectModule } from './modules/projects/project.module'
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ArticleModule } from './modules/articles/article.module'
     StorageModule,
     TagModule,
     ArticleModule,
+    ProjectModule,
   ],
   controllers: [],
   providers: [

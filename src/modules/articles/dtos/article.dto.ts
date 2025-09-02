@@ -3,7 +3,7 @@ import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 import { PaginationDTO } from '../../../common/dto/pagination.dto'
 import { PartialType } from '@nestjs/mapped-types'
 
-export class ArticleDto{
+export class ArticleDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -31,4 +31,4 @@ export class ArticleDto{
 }
 
 export class UpdateArticleDto extends PartialType(ArticleDto) {}
-export class QueryArticleDto extends PaginationDTO{}
+export class QueryArticleDto extends PaginationDTO {}

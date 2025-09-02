@@ -4,32 +4,30 @@ import { HydratedDocument } from 'mongoose'
 
 export type ArticleDocument = HydratedDocument<Article>
 
-
 @Schema({
-  timestamps: true
+  timestamps: true,
 })
-
 export class Article {
-  @Prop({type: String, required: true, unique: true})
+  @Prop({ type: String, required: true, unique: true })
   title: string
 
-  @Prop({type: String, required: true})
+  @Prop({ type: String, required: true })
   slug: string
 
-  @Prop({type: String, required: false})
+  @Prop({ type: String, required: false })
   description?: string
 
-  @Prop({type: String, required: true})
+  @Prop({ type: String, required: true })
   content: string
 
-  @Prop({type: String, ref: 'User',  required: true})
+  @Prop({ type: String, ref: 'User', required: true })
   author: string
 
-  @Prop({type: [String], required: false})
+  @Prop({ type: [String], required: false })
   tags?: string[]
 
   @Prop()
-  image? : string
+  image?: string
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article)

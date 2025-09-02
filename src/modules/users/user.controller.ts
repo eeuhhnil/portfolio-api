@@ -90,11 +90,11 @@ export class UserController {
         },
         role: {
           type: 'string',
-          enum: Object.values(UserRole)
+          enum: Object.values(UserRole),
         },
         gender: {
           type: 'string',
-          enum: Object.values(UserGender)
+          enum: Object.values(UserGender),
         },
         file: {
           type: 'string',
