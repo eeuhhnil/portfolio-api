@@ -3,7 +3,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpCode, HttpStatus,
   Param,
   Patch,
   Post,
@@ -12,7 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { ProjectService } from './project.service'
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ProjectDto, QueryProjectDto, UpdateProjectDto } from './dtos'
 import { FileInterceptor } from '@nestjs/platform-express'
 
@@ -23,6 +23,9 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new project' })
+  @ApiResponse({ status: 201, description: 'project created successfully' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   async createOne(@Body() payload: ProjectDto) {
     return {
       message: 'Create project successfully',
@@ -31,6 +34,9 @@ export class ProjectController {
   }
 
   @Get(':projectId')
+  @ApiOperation({ summary: 'Get project by ID' })
+  @ApiResponse({ status: 200, description: 'project retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'project not found' })
   async findOneById(@Param('projectId') projectId: string) {
     return {
       message: 'Get project by id successfully',
@@ -38,6 +44,8 @@ export class ProjectController {
     }
   }
 
+  @ApiOperation({ summary: 'Get all projects with pagination and filters' })
+  @ApiResponse({ status: 200, description: 'projects retrieved successfully' })
   @Get()
   async findMany(@Query() query: QueryProjectDto) {
     return {
@@ -91,6 +99,9 @@ export class ProjectController {
     }),
   )
   @Patch(':projectId')
+  @ApiOperation({ summary: 'Update project by ID' })
+  @ApiResponse({ status: 200, description: 'project updated successfully' })
+  @ApiResponse({ status: 404, description: 'project not found' })
   async findOneAndUpdate(
     @Param('projectId') projectId: string,
     @Body() payload: UpdateProjectDto,
@@ -107,6 +118,10 @@ export class ProjectController {
   }
 
   @Delete(':projectId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Delete project by ID' })
+  @ApiResponse({ status: 200, description: 'project deleted successfully' })
+  @ApiResponse({ status: 404, description: 'project not found' })
   async deleteOne(@Param('projectId') projectId: string) {
     return {
       message: 'Delete project successfully',

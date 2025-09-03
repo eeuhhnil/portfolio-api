@@ -2,14 +2,14 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpCode, HttpStatus,
   NotFoundException,
   Param,
   Patch,
   Post,
   Query,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { QueryTagDto, TagDto, UpdateTagDto } from './dtos/tag.dto'
 import { TagService } from './tag.service'
 
@@ -20,6 +20,9 @@ export class TagController {
   constructor(private readonly tagService: TagService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new tag' })
+  @ApiResponse({ status: 201, description: 'tag created successfully' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   async createTag(@Body() tagDto: TagDto) {
     return {
       message: 'Create tag successfully',
@@ -28,6 +31,8 @@ export class TagController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all tags with pagination and filters' })
+  @ApiResponse({ status: 200, description: 'tags retrieved successfully' })
   async findManyTags(@Query() query: QueryTagDto) {
     return {
       message: 'Get all tags successfully',
@@ -36,6 +41,9 @@ export class TagController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get tag by ID' })
+  @ApiResponse({ status: 200, description: 'tag retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'tag not found' })
   async findOne(@Param('id') id: string) {
     const user = await this.tagService.findOne(id)
 
@@ -50,6 +58,10 @@ export class TagController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Delete tag by ID' })
+  @ApiResponse({ status: 200, description: 'tag deleted successfully' })
+  @ApiResponse({ status: 404, description: 'tag not found' })
   async deleteOne(@Param('id') id: string) {
     return {
       message: 'Delete tag successfully',
@@ -58,6 +70,9 @@ export class TagController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update tag by ID' })
+  @ApiResponse({ status: 200, description: 'tag updated successfully' })
+  @ApiResponse({ status: 404, description: 'tag not found' })
   async findOneAndUpdate(
     @Param('id') id: string,
     @Body() updateTagDto: UpdateTagDto,
