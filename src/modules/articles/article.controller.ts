@@ -15,7 +15,7 @@ import { ArticleService } from './article.service'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 @Controller('articles')
-@ApiTags('articles')
+@ApiTags('Articles')
 @ApiBearerAuth()
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}

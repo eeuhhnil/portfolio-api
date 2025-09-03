@@ -5,7 +5,7 @@ import { CategoryDto, QueryCategoryDto, UpdateCategoryDto } from './dtos/categor
 
 @Controller('categories')
 @ApiBearerAuth()
-@ApiTags('categories')
+@ApiTags('Categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

@@ -28,6 +28,11 @@ export class ArticleDto {
   @IsMongoId({ each: true })
   @IsOptional()
   tags: string[]
+
+  @ApiPropertyOptional()
+  @IsMongoId({ each: true })
+  @IsOptional()
+  category: string[]
 }
 
 export class UpdateArticleDto extends PartialType(ArticleDto) {}

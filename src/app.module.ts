@@ -11,6 +11,7 @@ import { ArticleModule } from './modules/articles/article.module'
 import { ProjectModule } from './modules/projects/project.module'
 import { CategoryModule } from './modules/category/category.module'
 import { ServiceModule } from './modules/services/service.module'
+import { BookingModule } from './modules/booking/booking.module'
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ServiceModule } from './modules/services/service.module'
     ProjectModule,
     CategoryModule,
     ServiceModule,
+    BookingModule,
   ],
   controllers: [],
   providers: [

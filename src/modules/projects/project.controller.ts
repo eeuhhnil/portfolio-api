@@ -13,11 +13,7 @@ import {
 } from '@nestjs/common'
 import { ProjectService } from './project.service'
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
-import {
-  ProjectDto,
-  QueryProjectDto,
-  UpdateProjectDto,
-} from './dtos'
+import { ProjectDto, QueryProjectDto, UpdateProjectDto } from './dtos'
 import { FileInterceptor } from '@nestjs/platform-express'
 
 @Controller('projects')

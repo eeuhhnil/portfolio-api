@@ -26,6 +26,9 @@ export class Article {
   @Prop({ type: [String], required: false })
   tags?: string[]
 
+  @Prop({ type: [String], required: false })
+  category?: string[]
+
   @Prop()
   image?: string
 }
