@@ -13,6 +13,7 @@ import {
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ServiceService } from './service.service'
 import { CreateServiceDto, UpdateServiceDto, QueryServiceDto } from './dtos/service.dto'
+import { Public } from '../auth/decorators'
 
 @Controller('services')
 @ApiTags('Services')
@@ -33,6 +34,7 @@ export class ServiceController {
     }
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all services with pagination and filters' })
   @ApiResponse({ status: 200, description: 'Services retrieved successfully' })
@@ -43,6 +45,7 @@ export class ServiceController {
     }
   }
 
+  @Public()
   @Get(':serviceId')
   @ApiOperation({ summary: 'Get service by ID' })
   @ApiResponse({ status: 200, description: 'Service retrieved successfully' })

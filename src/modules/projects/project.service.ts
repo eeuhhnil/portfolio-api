@@ -46,25 +46,27 @@ export class ProjectService {
     if (!project) {
       throw new Error('Project not found')
     }
-    let avatar: string | undefined
-    if (file) {
-      const processedAvatar = await this.storage.proccessAvatarFile(file)
-      const fileExtension = path.extname(processedAvatar.originalname)
-      avatar = await this.storage.uploadFile(
-        `projects/${project._id}${fileExtension}`,
-        file,
-      )
-    }
 
-    if (payload.removeImage) {
-      const project = await this.projectModel.findOne(filter)
+    if (payload.removeImage || file) {
       if (project?.image) {
         await this.storage.deleteFile(
           this.storage.extractKeyFromUrl(project.image),
         )
       }
+      project.image = undefined
     }
-    project.image = avatar ? avatar : project.image
+
+    let avatar: string | undefined
+    if (file) {
+      const processedAvatar = await this.storage.proccessAvatarFile(file)
+      const fileExtension = path.extname(processedAvatar.originalName)
+      avatar = await this.storage.uploadFile(
+        `projects/${project._id}${fileExtension}`,
+        processedAvatar,
+      )
+      project.image = avatar
+    }
+
     Object.assign(project, payload)
     return project.save()
   }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -6,13 +7,14 @@ import {
   Param,
   Patch,
   Post,
-  Query,
+  Query, UploadedFile, UseInterceptors,
 } from '@nestjs/common'
 import { ArticleDto, QueryArticleDto, UpdateArticleDto } from './dtos'
-import { AuthUser } from '../auth/decorators'
+import { AuthUser, Public } from '../auth/decorators'
 import { AuthPayload } from '../auth/types'
 import { ArticleService } from './article.service'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @Controller('articles')
 @ApiTags('Articles')
@@ -37,6 +39,7 @@ export class ArticleController {
     }
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all articles with pagination and filters' })
   @ApiResponse({ status: 200, description: 'articles retrieved successfully' })
@@ -47,6 +50,7 @@ export class ArticleController {
     }
   }
 
+  @Public()
   @Get(':articleId')
   @ApiOperation({ summary: 'Get article by ID' })
   @ApiResponse({ status: 200, description: 'article retrieved successfully' })
@@ -58,6 +62,51 @@ export class ArticleController {
     }
   }
 
+
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
+        title: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+        content: {
+          type: 'string',
+        },
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        removeImage: {
+          type: 'boolean',
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: 5 * 1024 * 1024 },
+      fileFilter: (req, file, callback) => {
+        if (
+          !file.mimetype.startsWith('image/') ||
+          file.mimetype === 'image/gif'
+        ) {
+          return callback(
+            new BadRequestException('Only images accepted'),
+            false,
+          )
+        }
+        callback(null, true)
+      },
+    }),
+  )
   @Patch(':articleId')
   @ApiOperation({ summary: 'Update article by ID' })
   @ApiResponse({ status: 200, description: 'article updated successfully' })
@@ -65,12 +114,15 @@ export class ArticleController {
   async UpdateArticle(
     @Param('articleId') articleId: string,
     @Body() payload: UpdateArticleDto,
+    @UploadedFile() file?: Express.Multer.File,
+
   ) {
     return {
       message: 'Update article',
       data: await this.articleService.findOneAndUpdateOne(
         { _id: articleId },
         payload,
+        file
       ),
     }
   }

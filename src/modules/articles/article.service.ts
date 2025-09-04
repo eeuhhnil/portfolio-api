@@ -7,13 +7,16 @@ import {
   PaginateOptions,
   QueryOptions,
 } from 'mongoose'
-import { QueryArticleDto } from './dtos'
+import { QueryArticleDto, UpdateArticleDto } from './dtos'
+import { StorageService } from '../storages/storage.service'
+import * as path from 'node:path'
 
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectModel(Article.name)
     private readonly articleModel: PaginateModel<Article>,
+    private readonly storage: StorageService,
   ) {}
 
   async createOne(article: Omit<Article, '_id'>) {
@@ -41,9 +44,42 @@ export class ArticleService {
 
   async findOneAndUpdateOne(
     filter: FilterQuery<Article>,
-    data: Partial<Omit<Article, '_id'>>,
+    payload: UpdateArticleDto,
+    file?: Express.Multer.File,
   ) {
-    return this.articleModel.findOneAndUpdate(filter, data, { new: true })
+    const article = await this.articleModel.findOne(filter)
+    if (!article) {
+      throw new Error('article not found')
+    }
+
+    if (payload.removeImage || file) {
+      if (article?.image) {
+        await this.storage.deleteFile(
+          this.storage.extractKeyFromUrl(article.image),
+        )
+      }
+      article.image = undefined
+    }
+
+    let avatar: string | undefined
+    if (file) {
+      const processedAvatar = await this.storage.proccessAvatarFile(file)
+
+      if (!processedAvatar || !processedAvatar.originalName) {
+        throw new Error('Failed to process avatar file')
+      }
+
+      const fileExtension = path.extname(processedAvatar.originalName)
+      avatar = await this.storage.uploadFile(
+        `articles/${article._id}${fileExtension}`,
+        processedAvatar,
+      )
+      article.image = avatar
+    }
+
+    Object.assign(article, payload)
+    await article.save()
+    return article
   }
 
   async remove(id: string) {

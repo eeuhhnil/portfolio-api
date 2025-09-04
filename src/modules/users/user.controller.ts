@@ -130,7 +130,7 @@ export class UserController {
     let avatar: string | undefined
     if (file) {
       const processedAvatar = await this.storage.proccessAvatarFile(file)
-      const fileExtension = path.extname(processedAvatar.originalname)
+      const fileExtension = path.extname(processedAvatar.originalName)
       avatar = await this.storage.uploadFile(
         `users/${id}${fileExtension}`,
         processedAvatar,

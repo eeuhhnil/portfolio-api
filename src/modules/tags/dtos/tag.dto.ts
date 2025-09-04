@@ -12,6 +12,6 @@ export class TagDto {
   name: string
 }
 
-export class QueryTagDto extends PartialType(PaginationDTO) {}
+export class QueryTagDto extends (PaginationDTO) {}
 
 export class UpdateTagDto extends PartialType(TagDto) {}

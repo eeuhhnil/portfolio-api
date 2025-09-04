@@ -15,6 +15,7 @@ import { ProjectService } from './project.service'
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ProjectDto, QueryProjectDto, UpdateProjectDto } from './dtos'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { Public } from '../auth/decorators'
 
 @Controller('projects')
 @ApiBearerAuth()
@@ -33,6 +34,7 @@ export class ProjectController {
     }
   }
 
+  @Public()
   @Get(':projectId')
   @ApiOperation({ summary: 'Get project by ID' })
   @ApiResponse({ status: 200, description: 'project retrieved successfully' })
@@ -44,6 +46,7 @@ export class ProjectController {
     }
   }
 
+  @Public()
   @ApiOperation({ summary: 'Get all projects with pagination and filters' })
   @ApiResponse({ status: 200, description: 'projects retrieved successfully' })
   @Get()

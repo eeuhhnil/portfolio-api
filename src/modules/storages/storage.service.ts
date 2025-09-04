@@ -52,11 +52,13 @@ export class StorageService implements OnModuleInit {
       extension = '.jpg'
     }
 
+    const originalName = file.originalname || `file${extension}`
+
     return {
       ...file,
       buffer: processImage,
-      mineType: outputMineType,
-      originalName: file.originalname.replace(/\.[^/.]+$/, extension),
+      mimeType: outputMineType,
+      originalName: originalName.replace(/\.[^/.]+$/, extension),
     }
   }
 
@@ -65,7 +67,7 @@ export class StorageService implements OnModuleInit {
       Bucket: this.s3Bucket,
       Key: fileKey,
       Body: file.buffer,
-      ContentType: file.mimetype,
+      ContentType: (file as any).mimeType || file.mimetype,
     }
 
     const command = new PutObjectCommand(uploadParam)

@@ -35,5 +35,9 @@ export class ArticleDto {
   category: string[]
 }
 
-export class UpdateArticleDto extends PartialType(ArticleDto) {}
+export class UpdateArticleDto extends PartialType(ArticleDto) {
+  @ApiPropertyOptional()
+  @IsOptional()
+  removeImage?: boolean
+}
 export class QueryArticleDto extends PaginationDTO {}

@@ -29,7 +29,7 @@ export class Article {
   @Prop({ type: [String], required: false })
   category?: string[]
 
-  @Prop()
+  @Prop({ type: String })
   image?: string
 }
 

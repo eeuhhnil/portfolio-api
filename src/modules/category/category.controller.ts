@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { CategoryService } from './category.service'
 import { CategoryDto, QueryCategoryDto, UpdateCategoryDto } from './dtos/category.dto'
+import { Public } from '../auth/decorators'
 
 @Controller('categories')
 @ApiBearerAuth()
@@ -20,6 +21,7 @@ export class CategoryController {
     }
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all categories with pagination and filters' })
   @ApiResponse({ status: 200, description: 'categories retrieved successfully' })

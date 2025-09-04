@@ -12,6 +12,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { QueryTagDto, TagDto, UpdateTagDto } from './dtos/tag.dto'
 import { TagService } from './tag.service'
+import { Public } from '../auth/decorators'
 
 @Controller('tags')
 @ApiTags('Tags')
@@ -30,6 +31,7 @@ export class TagController {
     }
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all tags with pagination and filters' })
   @ApiResponse({ status: 200, description: 'tags retrieved successfully' })
